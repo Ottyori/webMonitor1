@@ -33,6 +33,14 @@ jobs:
 
       - name: 変更があった場合に最新テキストを保存（自動コミット）
         run: |
+              # Pythonスクリプト実行の後に以下を追加
+      - name: Save state
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add last_text.txt
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Update last_text.txt" && git push)
+
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add last_text.txt
