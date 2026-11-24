@@ -1,0 +1,39 @@
+name: Web Update Monitor
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  check-website:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: リポジトリのコードを取得
+        uses: actions/checkout@v4
+
+      - name: Pythonのセットアップ
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 必要なライブラリのインストール
+        run: pip install requests beautifulsoup4
+
+      - name: 監視スクリプトの実行
+        env:
+          YAHOO_ADDRESS: ${{ secrets.YAHOO_ADDRESS }}
+          YAHOO_PASSWORD: ${{ secrets.YAHOO_PASSWORD }}
+          TO_ADDRESS: ${{ secrets.TO_ADDRESS }}
+        run: python monitor.py
+
+      - name: 変更があった場合に最新テキストを保存（自動コミット）
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add last_text.txt
+          git diff --staged --quiet || (git commit -m "Update last_text.txt" && git push)
