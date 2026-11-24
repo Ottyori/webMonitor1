@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 
 # ==========================================
 # ★監視したいサイトのURL
-TARGET_URL = "https://cityheaven.net"
+TARGET_URL = "https://www.cityheaven.net/tokyo/A1305/A130505/wakaba/A6ShopReservation/?girl_id=69234424"
 # ==========================================
 
 DATA_FILE = "last_text.txt"
